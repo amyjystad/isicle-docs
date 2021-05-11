@@ -1,6 +1,6 @@
 Overview
 ========
-ISiCLE, or the _in silico_ chemical library engine, is a pipeline for high-accuracy chemical property calculation. ISiCLE takes an `InChI`_ or `SMILES`_ string as input, generates an initial 3D conformation, and subsequently optimizes this initial structure through molecular dynamics simulations and quantum chemistry optimizations. Finally, ISiCLE simulates desired properties (e.g. collision cross section, NMR chemical shifts) for each conformer yielded during molecular dynamics simulations to produce a single value, Boltzmann-weighted by relative Gibb's free energy, giving emphasis to properties from highly probable conformations.
+ISiCLE, or the *in silico* chemical library engine, is a pipeline for high-accuracy chemical property calculation. ISiCLE takes an `InChI`_ or `SMILES`_ string as input, generates an initial 3D conformation, and subsequently optimizes this initial structure through molecular dynamics simulations and quantum chemistry optimizations. Finally, ISiCLE simulates desired properties (e.g. collision cross section, NMR chemical shifts) for each conformer yielded during molecular dynamics simulations to produce a single value, Boltzmann-weighted by relative Gibb's free energy, giving emphasis to properties from highly probable conformations.
 
 ISiCLE is implemented using the `Snakemake`_ workflow management system, enabling scalability, portability, provenance, fault tolerance, and automatic job restarting. Snakemake provides a readable Python-based workflow definition language and execution environment that scales, without modification, from single-core workstations to compute clusters through as-available job queuing based on a task dependency graph.
 
@@ -9,68 +9,82 @@ ISiCLE is implemented using the `Snakemake`_ workflow management system, enablin
 .. _Snakemake: https://snakemake.readthedocs.io
 
 .. image:: resources/schematic.png
-   align center
+   :align: center
 
 Installation
 ============
 Use `conda <https://www.anaconda.com/download/>`_ to create a new virtual environment with required dependencies:
-```bash
-conda create -n isicle -c conda-forge -c bioconda -c ambermd python=3.7 openbabel=2.4.1 rdkit ambertools snakemake numpy pandas yaml statsmodels
-```
+
+.. code-block:: bash
+
+  conda create -n isicle -c conda-forge -c bioconda -c ambermd python=3.7 openbabel=2.4.1 rdkit ambertools snakemake numpy pandas yaml statsmodels
 
 Additionally, ensure the following third-party software is installed and added to your ``PATH``:
+
 * `NWChem <http://www.nwchem-sw.org/index.php/Download>`_ (not required for ``ccs lite``)
 
 Activate the virtual environment:
-```
-conda activate isicle
-```
 
-Install ISiCLE using `pip <https://pypi.org/project/pip/>`_:
-```bash
-# clone/install
-git clone https://github.com/pnnl/isicle.git
-pip install isicle/
+.. code-block:: bash
 
-# direct
-pip install git+https://github.com/pnnl/isicle
-```
+  conda activate isicle
+
+
+Install ISiCLE using `pip <https://pypi.org/project/pip/>`_ :
+
+.. code-block:: bash
+
+  # clone/install
+  git clone https://github.com/pnnl/isicle.git
+  pip install isicle/
+
+  # direct
+  pip install git+https://github.com/pnnl/isicle
 
 Getting Started
 ===============
-For usage overview, use ``isicle --help`` or ``-h``. Currently, available modules include ``prep`` for input preparation, ``ccs`` for collision cross section calculation, ``shifts`` for NMR chemical shift calculation, and ``export`` to save results. For all modules (except ``export``), a Snakemake configuration file in [YAML](http://yaml.org/) format is required. ISiCLE will try to find ``config.yaml`` in the current directory, else a configuration file must be specified through the ``--config`` flag. Default [workflow](resources/example_config.yaml) and [cluster](resources/example_cluster.yaml) configurations are provided, but these are intended to be modified and supplied by the user to accomodate workflow-specific needs.
+For usage overview, use ``isicle --help`` or ``-h``. Currently, available modules include ``prep`` for input preparation, ``ccs`` for collision cross section calculation, ``shifts`` for NMR chemical shift calculation, and ``export`` to save results. For all modules (except ``export``), a Snakemake configuration file in `YAML <http://yaml.org/>`_ format is required. ISiCLE will try to find ``config.yaml`` in the current directory, else a configuration file must be specified through the ``--config`` flag. Default :download:`workflow <resources/example_config.yaml>` and :download:`cluster <resources/example_cluster.yaml>` configurations are provided, but these are intended to be modified and supplied by the user to accomodate workflow-specific needs.
 
 For the ``prep`` module, ISiCLE assumes the user starts with a text file with InChI or SMILES strings on each line. This ensures each input has a unique filname based on its InChI key identifier. We recommend using SMILES, as in some instances InChI processing can lead to unexpected results, though these occurences are rare. Detailed instructions can be accessed through the help flag (``isicle prep --help`` or ``-h``).
-```bash
-isicle prep input_list.txt
-```
+
+.. code-block:: bash
+
+  isicle prep input_list.txt
+
 
 For the ``ccs`` module, the user must specify calculation mode (``lite`` or ``standard``), followed by any additional flags (see ``isicle ccs --help`` or ``-h``). Before beginning a simulation, we recommend use of the ``--dryrun`` flag to ensure the run is configured correctly. For desktop environments, we recommend using ``lite`` mode:
-```bash
-isicle ccs lite --cores 4 --dryrun
-```
+
+.. code-block:: bash
+
+  isicle ccs lite --cores 4 --dryrun
+
 
 For ``slurm`` cluster environments, ``standard`` mode can be used:
-```bash
-isicle ccs standard --cluster cluster.yaml --jobs 999 --dryrun
-```
+
+.. code-block:: bash
+
+  isicle ccs standard --cluster cluster.yaml --jobs 999 --dryrun
+
 
 The ``shifts`` module does not require selection of a calculation mode, but is otherwise configured the same way as the ``ccs`` module. See ``isicle shifts --help`` or ``-h`` for a full list of options. We recommend use of supercomputing resources for the ``shifts`` module:
-```bash
-isicle shifts --cluster cluster.yaml --jobs 999 --dryrun
-```
+
+.. code-block:: bash
+
+  isicle shifts --cluster cluster.yaml --jobs 999 --dryrun
+
 
 Finally, results can be saved in a user-friendly format using the ``export`` module. See ``isicle export --help`` or ``-h`` for a full list of options, noting that the export command differs by ISiCLE module. For example, to export ``ccs standard`` results:
-```bash
-isicle export ccs standard results.tsv
-```
+
+.. code-block:: bash
+
+  isicle export ccs standard results.tsv
 
 Citing ISiCLE
 =============
 If you would like to reference ISiCLE in an academic paper, we ask you include the following references:
 
-* Colby, S.M., Thomas, D.G., Nuñez, J.R., Baxter, D.J., Glaesemann, K.R., Brown, J.M., Pirrung, M.A., Govind, N., Teeguarden, J.G., Metz, T.O. and Renslow, R.S., 2019. ISiCLE: A quantum chemistry pipeline for establishing in silico collision cross section libraries. _Analytical Chemistry_.
-* Yesiltepe, Y., Nunez, J.R., Colby, S.M., Thomas, D.G., Borkum, M.I., Reardon, P.N., Washton, N.M., Metz, T.O., Teeguarden, J.T., Govind, N., and Renslow, R.S., 2018. An automated framework for NMR chemical shift calculations of small organic molecules. _Journal of Cheminformatics_.
+* Colby, S.M., Thomas, D.G., Nuñez, J.R., Baxter, D.J., Glaesemann, K.R., Brown, J.M., Pirrung, M.A., Govind, N., Teeguarden, J.G., Metz, T.O. and Renslow, R.S., 2019. ISiCLE: A quantum chemistry pipeline for establishing in silico collision cross section libraries. *Analytical Chemistry*.
+* Yesiltepe, Y., Nunez, J.R., Colby, S.M., Thomas, D.G., Borkum, M.I., Reardon, P.N., Washton, N.M., Metz, T.O., Teeguarden, J.T., Govind, N., and Renslow, R.S., 2018. An automated framework for NMR chemical shift calculations of small organic molecules. *Journal of Cheminformatics*.
 
 The first describes ISiCLE for CCS, the second describes ISiCLE for NMR chemical shifts, and the third is to cite the software package (update version and access date appropriately).
 

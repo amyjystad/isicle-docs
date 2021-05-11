@@ -12,7 +12,8 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('~/ISiCLE_2/isicle/isicle/'))
+sys.path.insert(0, os.path.abspath('../'))
+print(sys.version)
 
 
 # -- Project information -----------------------------------------------------
@@ -30,7 +31,7 @@ release = '2.0.0'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['sphinx.ext.autodoc','myst_parser']
+extensions = ['sphinx.ext.autodoc']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -44,16 +45,18 @@ exclude_patterns = []
 # You can specify multiple suffix as a list of strings:
 
 # for Sphinx-1.3
-from recommonmark.parser import CommonMarkParser
+#from recommonmark.parser import CommonMarkParser
 
-source_parsers = {
-    '.md': CommonMarkParser,
-}
+#source_parsers = {
+#    '.md': CommonMarkParser,
+#}
+
+pygments_style = 'sphinx'
 
 source_suffix = {
     '.rst': 'restructuredtext',
-    '.txt': 'markdown',
-    '.md': 'markdown',
+#    '.txt': 'markdown',
+#    '.md': 'markdown',
 }
 
 # -- Options for HTML output -------------------------------------------------

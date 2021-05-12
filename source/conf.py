@@ -13,14 +13,13 @@
 import os
 import sys
 sys.path.insert(0, os.path.abspath('../'))
-print(sys.version)
 
 
 # -- Project information -----------------------------------------------------
 
 project = 'ISiCLE'
-copyright = '2021, Bard, Colby, Jystad, Nunez, Renslow'
-author = 'Bard, Colby, Jystad, Nunez, Renslow'
+copyright = '2021, Bade, Colby, Jystad, Nunez, Renslow'
+author = 'Bade, Colby, Jystad, Nunez, Renslow'
 
 # The full version, including alpha/beta/rc tags
 release = '2.0.0'
